@@ -25,22 +25,22 @@ public class OrderService {
         return new Resources<>(orders, linkTo(methodOn(OrderService.class).getAllOrder()).withSelfRel());
     }*/
 
-    public Order getOneOrder(Long id) {
-        return  orderRepository.findById(id)
+    public Resource<Order> getOneOrder(Long id) {
+        Order order =  orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
-        // orderResourceAssembler.toResource(order);
+        return orderResourceAssembler.toResource(order);
     }
 
     public Resources<Resource<Order>> all(){
         List<Resource<Order>> orders =  orderRepository.findAll().stream()
                 .map(orderResourceAssembler::toResource)
                 .collect(Collectors.toList());
-        return new Resources<>(orders, linkTo(methodOn(OrderService.class).all()).withSelfRel());
+        return new Resources<>(orders, linkTo(methodOn(OrderController.class).getAllOrders()).withSelfRel());
     }
 
-    public Order save(Order order)
+    public Resource<Order> save(Order order)
     {
-        return orderRepository.save(order);
+        return orderResourceAssembler.toResource(orderRepository.save(order));
     }
 
 

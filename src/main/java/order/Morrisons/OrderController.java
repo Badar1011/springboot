@@ -5,8 +5,12 @@ import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -26,12 +30,15 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{id}")
-    public Order getOneOrder(@PathVariable Long id) {
+    public Resource<Order> getOneOrder(@PathVariable Long id) {
         return orderService.getOneOrder(id);
     }
 
     @PostMapping("/orders")
-    public Order newOrder(@RequestBody Order order) {
-        return orderService.save(order);
+    public ResponseEntity<Resource<Order>> newOrder(@Valid @RequestBody Order order) throws URISyntaxException {
+        Resource<Order> orderResource = orderService.save(order);
+        return ResponseEntity
+                .created(new URI(orderResource.getId().expand().getHref()))
+                .body(orderResource);
     }
 }
