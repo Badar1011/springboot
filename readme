@@ -1,0 +1,18 @@
+There are 3 routes
+
+To post an order
+/orders [POST]
+
+
+To retrieve an order
+/orders/{id} [GET]
+
+To retrieve all orders
+/orders [GET]
+
+JSON object with hypermedia (HATEOAS) returned for every order
+
+
+To Run docker container run the commands below
+docker build -t morrisons .
+docker run -p 8080:8080 morrisons
